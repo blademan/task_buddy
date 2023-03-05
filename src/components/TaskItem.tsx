@@ -3,8 +3,11 @@ import { useTaskContext } from '../context/TaskContext'
 import { Task } from '../types'
 
 export const TaskItem = ({ task, time, id }: Task) => {
-	const { delTask, setIsDeletePopupOpen, setActiveTaskId, activeTaskId } = useTaskContext()
+	const { delTask, setIsDeletePopupOpen, setActiveTaskId, activeTaskId, editTask } = useTaskContext()
 	const [isConfirming, setIsConfirming] = useState(false)
+
+	const [isEditing, setIsEditing] = useState(false)
+	const [editedTask, setEditedTask] = useState(task)
 
 	const handleDeleteClick = () => {
 		setIsConfirming(true)
@@ -21,6 +24,21 @@ export const TaskItem = ({ task, time, id }: Task) => {
 		setIsConfirming(false)
 	}
 
+	const handleEditClick = () => {
+		setIsEditing(true)
+		setActiveTaskId(id)
+	}
+
+	const handleSaveClick = () => {
+		editTask(editedTask, id)
+		setIsEditing(false)
+	}
+
+	const handleCancelClick = () => {
+		setEditedTask(task)
+		setIsEditing(false)
+	}
+
 	return (
 		<li>
 			{isConfirming && activeTaskId === id ? (
@@ -33,12 +51,23 @@ export const TaskItem = ({ task, time, id }: Task) => {
 				</div>
 			) : (
 				<>
-					<p>
-						<span className='name'>{task}</span>
-						<span className='time'>{time}</span>
-					</p>
-					<i className='bi bi-pencil-square'></i>
-					<i onClick={handleDeleteClick} className='bi bi-trash' aria-label='Delete task'></i>
+					{isEditing && activeTaskId === id ? (
+						<>
+							<input type='text' value={editedTask} onChange={e => setEditedTask(e.target.value)} />
+							<button onClick={handleSaveClick}>Save</button>
+							<button onClick={handleCancelClick}>Cancel</button>
+						</>
+					) : (
+						<>
+							{' '}
+							<p>
+								<span className='name'>{task}</span>
+								<span className='time'>{time}</span>
+							</p>
+							<i onClick={handleEditClick} className='bi bi-pencil-square'></i>
+							<i onClick={handleDeleteClick} className='bi bi-trash' aria-label='Delete task'></i>
+						</>
+					)}
 				</>
 			)}
 		</li>

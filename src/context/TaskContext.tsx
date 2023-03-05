@@ -13,6 +13,7 @@ interface TaskContextValue {
 	isDeletePopupOpen: boolean
 	setActiveTaskId: (id: string | null) => void
 	activeTaskId: string | null
+	editTask: (id: string, task: string) => void
 }
 
 export const TaskContext = createContext<TaskContextValue>({
@@ -26,6 +27,7 @@ export const TaskContext = createContext<TaskContextValue>({
 	isDeletePopupOpen: false,
 	setActiveTaskId: () => {},
 	activeTaskId: null,
+	editTask: () => {},
 })
 
 interface TaskProviderProps {
@@ -63,6 +65,10 @@ export const TaskContextProvider: FC<TaskProviderProps> = ({ children }) => {
 		dispatch({ type: 'REMOVE' })
 	}
 
+	const editTask = (task: string, id: string) => {
+		dispatch({ type: 'EDIT', payload: { task: task, id: id } })
+	}
+
 	const [isClearAllOpen, setIsClearAllOpen] = useState(false)
 	const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false)
 	const [activeTaskId, setActiveTaskId] = useState<string | null>(null)
@@ -80,6 +86,7 @@ export const TaskContextProvider: FC<TaskProviderProps> = ({ children }) => {
 				setIsClearAllOpen,
 				setActiveTaskId,
 				activeTaskId,
+				editTask,
 			}}
 		>
 			{children}
