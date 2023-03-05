@@ -1,14 +1,13 @@
 import logo from '../assets/logo_task.png'
-
-type SetThemeType = (theme: string) => void
+import { useThemeContext } from '../context/ThemeContext'
 
 interface HeaderProps {
 	children: string
-	theme: string
-	setTheme: SetThemeType
 }
 
-export const Header = ({ children, theme, setTheme }: HeaderProps) => {
+export const Header = ({ children }: HeaderProps) => {
+	const { theme, setTheme } = useThemeContext()
+
 	return (
 		<header>
 			<span className='logo'>

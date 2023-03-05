@@ -34,19 +34,6 @@ interface TaskProviderProps {
 	children: React.ReactNode
 }
 
-// const initTask: Task[] = [
-// 	{
-// 		id: '1',
-// 		task: 'Do Work-out',
-// 		time: '15:45',
-// 	},
-// 	{
-// 		id: '2',
-// 		task: 'Make some food',
-// 		time: '12:00',
-// 	},
-// ]
-
 export const TaskContextProvider: FC<TaskProviderProps> = ({ children }) => {
 	const [isClearAllOpen, setIsClearAllOpen] = useState(false)
 	const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false)
