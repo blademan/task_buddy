@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useReducer, useState } from 'react'
+import { createContext, FC, useContext, useEffect, useReducer, useState } from 'react'
 import { Task } from '../types'
 import { taskReducer } from './taskReducer'
 
@@ -34,21 +34,31 @@ interface TaskProviderProps {
 	children: React.ReactNode
 }
 
-const defaultTasks: Task[] = [
-	{
-		id: '1',
-		task: 'Do Work-out',
-		time: '15:45',
-	},
-	{
-		id: '2',
-		task: 'Make some food',
-		time: '12:00',
-	},
-]
+// const initTask: Task[] = [
+// 	{
+// 		id: '1',
+// 		task: 'Do Work-out',
+// 		time: '15:45',
+// 	},
+// 	{
+// 		id: '2',
+// 		task: 'Make some food',
+// 		time: '12:00',
+// 	},
+// ]
 
 export const TaskContextProvider: FC<TaskProviderProps> = ({ children }) => {
-	const [state, dispatch] = useReducer(taskReducer, defaultTasks)
+	const [isClearAllOpen, setIsClearAllOpen] = useState(false)
+	const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false)
+	const [activeTaskId, setActiveTaskId] = useState<string | null>(null)
+
+	const storedTasks = localStorage.getItem('tasklist')
+	const initTask = storedTasks ? JSON.parse(storedTasks) : []
+	const [state, dispatch] = useReducer(taskReducer, initTask)
+
+	useEffect(() => {
+		localStorage.setItem('tasklist', JSON.stringify(state))
+	}, [state])
 
 	const addTask = (task: Task) => {
 		dispatch({ type: 'ADD', payload: task })
@@ -68,10 +78,6 @@ export const TaskContextProvider: FC<TaskProviderProps> = ({ children }) => {
 	const editTask = (task: string, id: string) => {
 		dispatch({ type: 'EDIT', payload: { task: task, id: id } })
 	}
-
-	const [isClearAllOpen, setIsClearAllOpen] = useState(false)
-	const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false)
-	const [activeTaskId, setActiveTaskId] = useState<string | null>(null)
 
 	return (
 		<TaskContext.Provider
