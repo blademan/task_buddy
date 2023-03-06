@@ -14,7 +14,7 @@ interface ThemeProps {
 export const ThemeContextProvider = ({ children }: ThemeProps) => {
 	const localStorageTheme = localStorage.getItem('theme')
 	const initTheme = localStorageTheme ? localStorageTheme : ''
-	console.log(initTheme)
+
 	const [theme, setTheme] = useState(initTheme)
 
 	useEffect(() => {
